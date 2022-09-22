@@ -551,6 +551,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -569,16 +573,12 @@ video {
   margin-bottom: 2.5rem;
 }
 
-.mt-5 {
-  margin-top: 1.25rem;
+.ml-20 {
+  margin-left: 5rem;
 }
 
 .mt-3 {
   margin-top: 0.75rem;
-}
-
-.ml-20 {
-  margin-left: 5rem;
 }
 
 .flex {
@@ -642,12 +642,17 @@ video {
   padding-right: 1.25rem;
 }
 
-.text-center {
-  text-align: center;
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 .font-bold {
   font-weight: 700;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .text-white {

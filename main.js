@@ -29,6 +29,11 @@ function makeScatterPlotGraph(xValues, yValues) {
     height = window.innerHeight,
     margin = { top: 100, right: 100, bottom: 100, left: 100 };
 
+  const points = [];
+  const middlePoints = [];
+
+  const lineGenerator = d3.line().curve(d3.curveCardinal);
+
   const div = d3.select("#scatterPlotGraph").append("div");
   const svg = div.append("svg").attr("width", width).attr("height", height);
 
@@ -37,13 +42,20 @@ function makeScatterPlotGraph(xValues, yValues) {
     .domain([d3.min(xValues), d3.max(xValues)])
     .range([0 + margin.left, width - margin.right]);
 
+  const xScaleRev = d3
+    .scaleLinear()
+    .domain([0 + margin.left, width - margin.right])
+    .range([d3.min(xValues), d3.max(xValues)]);
+
   const yScale = d3
     .scaleLinear()
     .domain([d3.min(yValues), d3.max(yValues)])
     .range([height - margin.bottom, 0 + margin.top]);
 
-  const points = [];
-  const middlePoints = [];
+  const yScaleRev = d3
+    .scaleLinear()
+    .domain([height - margin.bottom, 0 + margin.top])
+    .range([d3.min(yValues), d3.max(yValues)]);
 
   for (let i = 0; i < xValues.length; i++) {
     points.push({ x: xScale(xValues[i]), y: yScale(yValues[i]) });
@@ -67,21 +79,55 @@ function makeScatterPlotGraph(xValues, yValues) {
     .join("circle")
     .attr("cx", (d) => d.x)
     .attr("cy", (d) => d.y)
-    .attr("r", 5);
+    .attr("r", 7)
+    .on("mouseover", function (e, i) {
+      d3.select(this).attr("fill", "blue");
+
+      svg
+        .append("text")
+        .attr("id", `t-${Math.floor(i.x)}`)
+        .attr("x", i.x - 30)
+        .attr("y", i.y - 20)
+        .attr("class", "italic")
+        .text(`(${Math.round(xScaleRev(i.x))},${Math.round(yScaleRev(i.y))})`);
+
+      let lineX = lineGenerator([
+        [i.x, i.y],
+        [i.x, height - margin.bottom],
+      ]);
+      svg
+        .append("path")
+        .attr("d", lineX)
+        .attr("id", `x-${Math.floor(i.x)}`)
+        .attr("fill", "none")
+        .attr("stroke", "blue");
+
+      let lineY = lineGenerator([
+        [i.x, i.y],
+        [margin.left, i.y],
+      ]);
+      svg
+        .append("path")
+        .attr("d", lineY)
+        .attr("id", `y-${Math.floor(i.x)}`)
+        .attr("fill", "none")
+        .attr("stroke", "blue");
+    })
+    .on("mouseleave", function (e, i) {
+      d3.select(this).attr("fill", "black");
+      svg.select(`#x-${Math.floor(i.x)}`).remove();
+      svg.select(`#y-${Math.floor(i.x)}`).remove();
+      svg.select(`#t-${Math.floor(i.x)}`).remove();
+    });
 
   const middlePointsArr = middlePoints.map((middlePoint) => [
     middlePoint.x,
     middlePoint.y,
   ]);
 
-  const lineGenerator = d3.line().curve(d3.curveCardinal);
   const line = lineGenerator(middlePointsArr);
 
-  svg
-    .append("path")
-    .attr("d", line)
-    .attr("fill", "none")
-    .attr("stroke", "black");
+  svg.append("path").attr("d", line).attr("fill", "none").attr("stroke", "red");
 
   svg
     .append("g")
@@ -116,6 +162,4 @@ function removeChart(target) {
       .attr("class", "mt-3 text-blue-600 font-bold")
       .text("");
   }
-
-  console.log();
 }
