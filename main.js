@@ -24,6 +24,92 @@ scatterPlotForm.addEventListener("submit", (e) => {
   makeScatterPlotGraph(xValues, yValues);
 });
 
+function calculateCorrelation(selectore, xValues, yValues) {
+  const valuseNumber = xValues.length;
+  const columns = ["n", "x", "y", "xy", "x2", "y2"];
+
+  const table = selectore.append("table").attr("class", "mx-auto mb-10");
+  const theadrow = table.append("thead").append("tr").attr("class", "border-2");
+
+  for (let i = 0; i < columns.length; i++) {
+    if (columns[i].includes("2")) {
+      theadrow
+        .append("th")
+        .attr("class", "border-2 p-3 text-xl")
+        .text(columns[i][0])
+        .append("sup")
+        .text("2");
+    } else {
+      theadrow
+        .append("th")
+        .attr("class", "border-2 p-3 text-xl")
+        .text(columns[i]);
+    }
+  }
+
+  const tbody = table.append("tbody");
+
+  let xSummation = 0;
+  let ySummation = 0;
+  let xySummation = 0;
+  let x2Summation = 0;
+  let y2Summation = 0;
+  for (let i = 0; i < valuseNumber; i++) {
+    let row = tbody.append("tr");
+
+    row
+      .append("td")
+      .attr("class", "text-center")
+      .text(i + 1);
+
+    xSummation += xValues[i];
+    row.append("td").attr("class", "text-center").text(xValues[i]);
+
+    ySummation += yValues[i];
+    row.append("td").attr("class", "text-center").text(xValues[i]);
+
+    xySummation += xValues[i] * yValues[i];
+    row
+      .append("td")
+      .attr("class", "text-center")
+      .text(xValues[i] * yValues[i]);
+
+    x2Summation += xValues[i] ** 2;
+    row
+      .append("td")
+      .attr("class", "text-center")
+      .text(xValues[i] ** 2);
+
+    y2Summation += yValues[i] ** 2;
+    row
+      .append("td")
+      .attr("class", "text-center")
+      .text(yValues[i] ** 2);
+  }
+
+  const tfoot = table.append("tfoot");
+  const tfootrow = tfoot.append("tr").attr("class", "font-bold");
+
+  tfootrow.append("td").attr("class", "text-center px-2").text("Totals:");
+  tfootrow.append("td").attr("class", "text-center px-2").text(xSummation);
+  tfootrow.append("td").attr("class", "text-center px-2").text(ySummation);
+  tfootrow.append("td").attr("class", "text-center px-2").text(xySummation);
+  tfootrow.append("td").attr("class", "text-center px-2").text(x2Summation);
+  tfootrow.append("td").attr("class", "text-center px-2").text(y2Summation);
+
+  let correlation =
+    (valuseNumber * xySummation - xSummation * ySummation) /
+    (Math.sqrt(valuseNumber * x2Summation - xSummation ** 2) *
+      Math.sqrt(valuseNumber * y2Summation - ySummation ** 2));
+
+  tfoot
+    .append("tr")
+    .append("td")
+    .attr("colspan", "6")
+    .attr("class", "text-center font-bold text-blue-700 py-2")
+    .text("r = " + correlation);
+}
+
 function makeScatterPlotGraph(xValues, yValues) {
   const width = window.innerWidth,
     height = window.innerHeight,
@@ -138,6 +224,9 @@ function makeScatterPlotGraph(xValues, yValues) {
     .call(d3.axisBottom(xScale))
     .attr("transform", `translate(0, ${height - margin.bottom})`);
 
+  // div.append("table")
+
+  calculateCorrelation(div, xValues, yValues);
   div
     .append("button")
     .attr(
