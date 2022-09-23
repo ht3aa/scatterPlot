@@ -66,9 +66,10 @@ function calculateCorrelation(selectore, xValues, yValues) {
     row.append("td").attr("class", "text-center").text(xValues[i]);
 
     ySummation += yValues[i];
-    row.append("td").attr("class", "text-center").text(xValues[i]);
+    row.append("td").attr("class", "text-center").text(yValues[i]);
 
     xySummation += xValues[i] * yValues[i];
+
     row
       .append("td")
       .attr("class", "text-center")
