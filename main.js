@@ -160,7 +160,7 @@ function makeScatterPlotGraph(xValues, yValues) {
     .append("button")
     .attr(
       "class",
-      "mb-10 ml-20 bg-red-600 py-2 px-5 text-white hover:bg-red-800"
+      "mb-10 mx-20 bg-red-600 py-2 px-5 text-white hover:bg-red-800"
     )
     .attr("onclick", "removeChart(this)")
     .text("Remove chart");
@@ -185,6 +185,10 @@ function calculateCorrelation(selector, xValues, yValues, dataLength) {
     .append("div")
     .attr("class", "w-1/2 overflow-x-scroll mx-auto mb-10 ");
   const table = div.append("table").attr("class", "w-screen");
+  selector
+    .append("p")
+    .attr("class", "text-center font-bold text-red-400 mb-10")
+    .text("You can scroll to the right and left");
   const tHeadRow = table.append("thead").append("tr").attr("class", "border-2");
 
   for (let i = 0; i < columns.length; i++) {
