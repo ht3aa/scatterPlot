@@ -57,7 +57,7 @@ function makeScatterPlotGraph(xValues, yValues) {
     points = [],
     middlePoints = [],
     lineGenerator = d3.line().curve(d3.curveCardinal), // TODO: refactor
-    div = d3.select("#scatterPlotGraph").append("div"),
+    div = d3.select("#scatterPlotGraph").append("div").attr("class", "w-full"),
     svg = div.append("svg").attr("width", width).attr("height", height),
     xScale = d3
       .scaleLinear()
@@ -184,7 +184,7 @@ function calculateCorrelation(selector, xValues, yValues, dataLength) {
   const div = selector
     .append("div")
     .attr("class", "w-1/2 overflow-x-scroll mx-auto mb-10 ");
-  const table = div.append("table").attr("class", "w-screen ");
+  const table = div.append("table").attr("class", "w-screen");
   const tHeadRow = table.append("thead").append("tr").attr("class", "border-2");
 
   for (let i = 0; i < columns.length; i++) {
